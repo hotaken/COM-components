@@ -8,7 +8,7 @@ int main()
 	CoInitialize(NULL); // This parameter is reserved, 
 					   // and should be NULL
 
-	HRESULT hr; //
+	HRESULT hr; 
 	IClassFactory* pCF = NULL;
 	ICreateCar* pICreateCar = NULL;
 	IStats* pStats = NULL;
