@@ -1,0 +1,5 @@
+LIBRARY "CoCarComp"
+
+EXPORTS
+	DllGetClassObject PRIVATE
+	DllCanUnloadNow	PRIVATE
