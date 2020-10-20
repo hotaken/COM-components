@@ -1,6 +1,9 @@
 #include "CoCarClassFactory.h"
 #include "CoCar.h"
 
+extern DWORD g_lockCount;
+extern DWORD g_objCount;
+
 STDMETHODIMP_(ULONG) CoCarClassFactory::AddRef()
 {
     return ++m_refCount;
@@ -48,6 +51,12 @@ STDMETHODIMP CoCarClassFactory::CreateInstance(LPUNKNOWN pUnkOuter, REFIID riid,
 
     pCarObj = new CoCar;
 
+    if (pCarObj == nullptr)
+    {
+        return E_OUTOFMEMORY;
+    }
+
+    pCarObj->Init();
     hr = pCarObj->QueryInterface(riid, ppv);
 
     if (FAILED(hr))
@@ -57,8 +66,7 @@ STDMETHODIMP CoCarClassFactory::CreateInstance(LPUNKNOWN pUnkOuter, REFIID riid,
 
 }
 
-extern DWORD g_lockCount;
-extern DWORD g_objCount;
+
 
 CoCarClassFactory::CoCarClassFactory()
 {

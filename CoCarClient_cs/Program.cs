@@ -1,8 +1,22 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace CoCarClientCs
 {
+    [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("00020400-0000-0000-C000-000000000046")]
+    public interface IDispatch
+    {
+        int GetTypeInfoCount();
+
+        [return: MarshalAs(UnmanagedType.Interface)]
+        ITypeInfo GetTypeInfo([In, MarshalAs(UnmanagedType.U4)] int iTInfo, [In, MarshalAs(UnmanagedType.U4)] int lcid);
+
+        void GetIDsOfNames([In] ref Guid riid, [In, MarshalAs(UnmanagedType.LPArray)] string[] rgszNames,
+            [In, MarshalAs(UnmanagedType.U4)] int cNames, [In, MarshalAs(UnmanagedType.U4)] int lcid,
+            [Out, MarshalAs(UnmanagedType.LPArray)]
+            int[] rgDispId);
+    }
     // {5228FE37-5148-438A-92E1-9E93A7315FE1}
     //DEFINE_GUID(CLSID_CoCar,
     //	0x5228fe37, 0x5148, 0x438a, 0x92, 0xe1, 0x9e, 0x93, 0xa7, 0x31, 0x5f, 0xe1);
@@ -17,7 +31,7 @@ namespace CoCarClientCs
     [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("6A60CA50-F37D-4292-A873-A98FC9ABB6BC")]
     public interface ICreateCar
     {
-        void SetPetName(string petName);
+        void SetName(string petName);
         void SetMaxSpeed(int maxSp);
     }
 
@@ -48,15 +62,27 @@ namespace CoCarClientCs
         [STAThread]
         static void Main(string[] args)
         {
-            Car myCar = new Car();
-            ICreateCar iCrCar = (ICreateCar)myCar;
-            iCrCar.SetPetName("KOCHA");
+            //Car myCar = new Car();
+            //ICreateCar iCrCar = (ICreateCar)myCar;
+            //iCrCar.SetPetName("KOCHA");
 
-            var iStats = (IStats)myCar;
-            string name = null;
+            //var iStats = (IStats)myCar;
+            //string name = null;
+            //iStats.GetPetName(ref name);
+            //Console.WriteLine($"name is '{name}'.");
+            //Console.ReadKey();
+            var type_car = Type.GetTypeFromProgID("CocarComp.CoCar");
+            var car = Activator.CreateInstance(type_car);
+            var pDisp = (IDispatch)car;
+            var count_type = pDisp.GetTypeInfoCount();
+            Console.WriteLine($"Type info count: {count_type}");
+
+            var iCrCar = (ICreateCar)car;
+            iCrCar.SetName("KOCHA");
+            var iStats = (IStats)car;
+            string name = "";
             iStats.GetPetName(ref name);
-            Console.WriteLine($"name is '{name}'.");
-            Console.ReadKey();
+            Console.WriteLine($"Name: {name}");
         }
     }
 }

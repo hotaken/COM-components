@@ -4,9 +4,9 @@
 
 extern DWORD g_objCount;
 // Конструктор и деструктор СоСаr
-CoCar::CoCar() : m_refCount(0), m_currSpeed(0), m_maxSpeed(0)
+CoCar::CoCar()
 {
-	m_petName = SysAllocString(L"Default Pet Name");
+	m_petName = SysAllocString(L"Default Name");
 	++g_objCount;
 }
 
@@ -15,8 +15,21 @@ CoCar::~CoCar()
 	--g_objCount;
 	if (m_petName)
 		SysFreeString(m_petName);
-	MessageBoxA(NULL, "CoCar is dead", "Destructor", MB_OK |
+	MessageBoxA(NULL, "It is dead", "Destructor", MB_OK |
 		MB_SETFOREGROUND);
+}
+HRESULT CoCar::Init()
+{
+	ITypeLib* pTypeLib;
+	if (FAILED(LoadRegTypeLib(CLSID_CoCar, 1, 0, LANG_NEUTRAL, &pTypeLib)))
+	{
+		return E_FAIL;
+	}
+
+	const auto hr = pTypeLib->GetTypeInfoOfGuid(CLSID_CoCar, &_typeInfo);
+
+	pTypeLib->Release();
+	return hr;
 }
 
 // Реализация IEngine
@@ -66,16 +79,13 @@ STDMETHODIMP CoCar::DisplayStats()
 	WideCharToMultiByte(CP_ACP, NULL, m_petName, -1, buff,
 		MAX_NAME_LENGTH, NULL, NULL);
 
-	MessageBoxA(NULL,  buff, "Pet Name", MB_OK | MB_SETFOREGROUND);
+	MessageBoxA(NULL,  buff, "Name", MB_OK | MB_SETFOREGROUND);
 	memset(buff, 0, sizeof(buff));
 	sprintf_s(buff, "%d", m_maxSpeed);
 	MessageBoxA(NULL,  buff, "Max Speed", MB_OK |
 		MB_SETFOREGROUND);
 	return S_OK;
 }
-
-
-
 
 
 
@@ -104,7 +114,10 @@ STDMETHODIMP CoCar::QueryInterface(REFIID riid, void** pIFace)
 		MessageBoxA(NULL, "Handed out IUnknown", "QI", MB_OK |
 			MB_SETFOREGROUND);
 	}
-
+	else if (riid == IID_IDispatch)
+	{
+		*pIFace = (IDispatch*)this;
+	}
 	else if (riid == IID_IEngine)
 	{
 		*pIFace = (IEngine*)this;
@@ -122,7 +135,7 @@ STDMETHODIMP CoCar::QueryInterface(REFIID riid, void** pIFace)
 	else if (riid == IID_ICreateCar)
 	{
 		*pIFace = (ICreateCar*)this;
-		MessageBoxA(NULL, "Handed out ICreateCar", "QI", MB_OK |
+		MessageBoxA(NULL, "Handed out ICreate", "QI", MB_OK |
 			MB_SETFOREGROUND);
 	}
 	else
@@ -133,5 +146,43 @@ STDMETHODIMP CoCar::QueryInterface(REFIID riid, void** pIFace)
 
 	((IUnknown*)(*pIFace))->AddRef();
 	return S_OK;
+}
+STDMETHODIMP CoCar::GetTypeInfoCount(UINT* pctinfo)
+{
+	*pctinfo = 1;
+	return S_OK;
+}
+STDMETHODIMP CoCar::GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo)
+{
+	*ppTInfo = nullptr;
+	if (iTInfo)
+	{
+		return DISP_E_BADINDEX;
+	}
+
+	_typeInfo->AddRef();
+	*ppTInfo = _typeInfo;
+	return S_OK;
+}
+
+HRESULT CoCar::GetIDsOfNames(const IID& riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId)
+{
+	if (riid != IID_NULL)
+	{
+		return DISP_E_UNKNOWNINTERFACE;
+	}
+
+	return DispGetIDsOfNames(_typeInfo, rgszNames, cNames, rgDispId);
+}
+
+HRESULT CoCar::Invoke(DISPID dispIdMember, const IID& riid, LCID lcid, WORD wFlags, DISPPARAMS* pDispParams,
+	VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr)
+{
+	if (riid != IID_NULL)
+	{
+		return DISP_E_UNKNOWNINTERFACE;
+	}
+
+	return DispInvoke(this, _typeInfo, dispIdMember, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
 }
 
