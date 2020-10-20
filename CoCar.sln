@@ -9,6 +9,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoCarClientCpp", "CoCarClie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCarClientCs", "CoCarClient_cs\CoCarClientCs.csproj", "{E94C4E1B-CDE7-40CE-82EC-D141DAD1F809}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{409CF51A-8427-48F8-AF82-0655FFDC9E2C}"
+	ProjectSection(SolutionItems) = preProject
+		carcomponent.reg = carcomponent.reg
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
