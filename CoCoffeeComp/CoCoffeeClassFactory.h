@@ -1,10 +1,10 @@
 #pragma once
 #include <windows.h>
-class CoCarClassFactory : public IClassFactory
+class CoCoffeeClassFactory : public IClassFactory
 {
 public:
-    CoCarClassFactory();
-    virtual ~CoCarClassFactory();
+    CoCoffeeClassFactory();
+    virtual ~CoCoffeeClassFactory();
 
     // IUnknown
     STDMETHODIMP QueryInterface(REFIID riid, void** pIFace);

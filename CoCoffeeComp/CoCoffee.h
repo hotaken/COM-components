@@ -1,14 +1,14 @@
 #pragma once
 #include "interfaces.h"
 
-const int MAX_SPEED = 1000;
+const int MAX_VOLUME = 1000;
 const int MAX_NAME_LENGTH = 256;
 
-class CoCar : public IEngine, public ICreateCar, public IStats, public IDispatch
+class CoCoffee : public IFilling, public ICreate, public IStats, public IDispatch
 {
 public:
-	CoCar();
-	virtual ~CoCar();
+	CoCoffee();
+	virtual ~CoCoffee();
 
 	HRESULT Init();
 
@@ -24,24 +24,24 @@ public:
 	STDMETHODIMP_(DWORD)AddRef();
 	STDMETHODIMP_(DWORD)Release();
 
-	// IEngine
-	STDMETHODIMP SpeedUp();
-	STDMETHODIMP GetMaxSpeed(int* maxSpeed);
-	STDMETHODIMP GetCurSpeed(int* curSpeed);
+	// IFilling
+	STDMETHODIMP Use();
+	STDMETHODIMP GetMaxVolume(int* maxSpeed);
+	STDMETHODIMP GetCurVolume(int* curSpeed);
 
 	// IStats
 	STDMETHODIMP DisplayStats();
-	STDMETHODIMP GetPetName(BSTR* petName);
+	STDMETHODIMP GetName(BSTR* petName);
 
-	// ICreateCar
-	STDMETHODIMP SetPetName(BSTR petName);
-	STDMETHODIMP SetMaxSpeed(int maxSp);
+	// ICreate
+	STDMETHODIMP SetName(BSTR petName);
+	STDMETHODIMP SetMaxVolume(int maxSp);
 private:
 	ITypeInfo* _typeInfo{};
 	DWORD m_refCount = 0;
-	BSTR	m_petName; // Инициализация через SysAllocString(), 
+	BSTR	m_Name; // Инициализация через SysAllocString(), 
 	// удаление — через вызов SysFreeString()
-	int		m_maxSpeed = 0; // Максимальная скорость
-	int		m_currSpeed = 0; // Текущая скорость СоСаr
+	int		m_maxVolume = 0; // Максимальная скорость
+	int		m_currVolume = 0; // Текущая скорость СоСаr
 };
 

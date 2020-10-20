@@ -1,101 +1,107 @@
-#include "CoCar.h"
+#include "CoCoffee.h"
 #include <cstdio>
 #include "iid.h"
 
 extern DWORD g_objCount;
-// Конструктор и деструктор СоСаr
-CoCar::CoCar()
+// Конструктор и деструктор 
+CoCoffee::CoCoffee()
 {
-	m_petName = SysAllocString(L"Default Name");
+	m_Name = SysAllocString(L"Default Name");
 	++g_objCount;
 }
 
-CoCar::~CoCar()
+CoCoffee::~CoCoffee()
 {
 	--g_objCount;
-	if (m_petName)
-		SysFreeString(m_petName);
+	if (m_Name)
+		SysFreeString(m_Name);
 	MessageBoxA(NULL, "It is dead", "Destructor", MB_OK |
 		MB_SETFOREGROUND);
 }
-HRESULT CoCar::Init()
+HRESULT CoCoffee::Init()
 {
 	ITypeLib* pTypeLib;
-	if (FAILED(LoadRegTypeLib(CLSID_CoCar, 1, 0, LANG_NEUTRAL, &pTypeLib)))
+	if (FAILED(LoadRegTypeLib(CLSID_CoCoffee, 1, 0, LANG_NEUTRAL, &pTypeLib)))
 	{
 		return E_FAIL;
 	}
 
-	const auto hr = pTypeLib->GetTypeInfoOfGuid(CLSID_CoCar, &_typeInfo);
+	const auto hr = pTypeLib->GetTypeInfoOfGuid(CLSID_CoCoffee, &_typeInfo);
 
 	pTypeLib->Release();
 	return hr;
 }
 
-// Реализация IEngine
-STDMETHODIMP CoCar::SpeedUp()
+// Реализация IFilling
+STDMETHODIMP CoCoffee::Use()
 {
-	m_currSpeed += 10;
+	if (m_currVolume < 10) 
+		return S_OK;
+	m_currVolume -= 10;
 	return S_OK;
 }
 
-STDMETHODIMP CoCar::GetMaxSpeed(int* maxSpeed)
+STDMETHODIMP CoCoffee::GetMaxVolume(int* maxVolume)
 {
-	*maxSpeed = m_maxSpeed;
+	*maxVolume = m_maxVolume;
 	return S_OK;
 }
 
-STDMETHODIMP CoCar::GetCurSpeed(int* curSpeed)
+STDMETHODIMP CoCoffee::GetCurVolume(int* curVol)
 {
-	*curSpeed = m_currSpeed;
+	*curVol = m_currVolume;
 	return S_OK;
 }
 
-// Реализация ICreateCar
-STDMETHODIMP CoCar::SetPetName(BSTR petName)
+// Реализация ICreate
+STDMETHODIMP CoCoffee::SetName(BSTR Name)
 {
-	SysReAllocString(&m_petName, petName);
+	SysReAllocString(&m_Name, Name);
 	return S_OK;
 }
 
-STDMETHODIMP CoCar::SetMaxSpeed(int maxSp)
+STDMETHODIMP CoCoffee::SetMaxVolume(int maxVol)
 {
-	if (maxSp < MAX_SPEED)
-		m_maxSpeed = maxSp;
+	if (maxVol < MAX_VOLUME)
+	{
+		m_maxVolume = maxVol;
+		m_currVolume = maxVol;
+	}
+		
 	return S_OK;
 }
 
 // Возвращает клиенту копию внутреннего буфера BSTR 
-STDMETHODIMP CoCar::GetPetName(BSTR* petName)
+STDMETHODIMP CoCoffee::GetName(BSTR* Name)
 {
-	*petName = SysAllocString(m_petName);
+	*Name = SysAllocString(m_Name);
 	return S_OK;
 }
 // Информация о СоСаr помещается в блоки сообщений
-STDMETHODIMP CoCar::DisplayStats()
+STDMETHODIMP CoCoffee::DisplayStats()
 {
 	// Need to transfer a BSTR to a char array.
 	char buff[MAX_NAME_LENGTH];
-	WideCharToMultiByte(CP_ACP, NULL, m_petName, -1, buff,
+	WideCharToMultiByte(CP_ACP, NULL, m_Name, -1, buff,
 		MAX_NAME_LENGTH, NULL, NULL);
 
 	MessageBoxA(NULL,  buff, "Name", MB_OK | MB_SETFOREGROUND);
 	memset(buff, 0, sizeof(buff));
-	sprintf_s(buff, "%d", m_maxSpeed);
-	MessageBoxA(NULL,  buff, "Max Speed", MB_OK |
+	sprintf_s(buff, "%d", m_maxVolume);
+	MessageBoxA(NULL,  buff, "Max Volume", MB_OK |
 		MB_SETFOREGROUND);
 	return S_OK;
 }
 
 
 
-STDMETHODIMP_(DWORD) CoCar::AddRef()
+STDMETHODIMP_(DWORD) CoCoffee::AddRef()
 {
 	++m_refCount;
 	return m_refCount;
 }
 
-STDMETHODIMP_(DWORD) CoCar::Release()
+STDMETHODIMP_(DWORD) CoCoffee::Release()
 {
 	if (--m_refCount == 0)
 	{
@@ -105,12 +111,12 @@ STDMETHODIMP_(DWORD) CoCar::Release()
 	else
 		return m_refCount;
 }
-STDMETHODIMP CoCar::QueryInterface(REFIID riid, void** pIFace)
+STDMETHODIMP CoCoffee::QueryInterface(REFIID riid, void** pIFace)
 {
 	// Which aspect of me do they want?
 	if (riid == IID_IUnknown)
 	{
-		*pIFace = (IUnknown*)(IEngine*)this;
+		*pIFace = (IUnknown*)(IFilling*)this;
 		MessageBoxA(NULL, "Handed out IUnknown", "QI", MB_OK |
 			MB_SETFOREGROUND);
 	}
@@ -118,10 +124,10 @@ STDMETHODIMP CoCar::QueryInterface(REFIID riid, void** pIFace)
 	{
 		*pIFace = (IDispatch*)this;
 	}
-	else if (riid == IID_IEngine)
+	else if (riid == IID_IFilling)
 	{
-		*pIFace = (IEngine*)this;
-		MessageBoxA(NULL, "Handed out IEngine", "QI", MB_OK |
+		*pIFace = (IFilling*)this;
+		MessageBoxA(NULL, "Handed out IFilling", "QI", MB_OK |
 			MB_SETFOREGROUND);
 	}
 
@@ -132,9 +138,9 @@ STDMETHODIMP CoCar::QueryInterface(REFIID riid, void** pIFace)
 			MB_SETFOREGROUND);
 	}
 
-	else if (riid == IID_ICreateCar)
+	else if (riid == IID_ICreate)
 	{
-		*pIFace = (ICreateCar*)this;
+		*pIFace = (ICreate*)this;
 		MessageBoxA(NULL, "Handed out ICreate", "QI", MB_OK |
 			MB_SETFOREGROUND);
 	}
@@ -147,12 +153,12 @@ STDMETHODIMP CoCar::QueryInterface(REFIID riid, void** pIFace)
 	((IUnknown*)(*pIFace))->AddRef();
 	return S_OK;
 }
-STDMETHODIMP CoCar::GetTypeInfoCount(UINT* pctinfo)
+STDMETHODIMP CoCoffee::GetTypeInfoCount(UINT* pctinfo)
 {
 	*pctinfo = 1;
 	return S_OK;
 }
-STDMETHODIMP CoCar::GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo)
+STDMETHODIMP CoCoffee::GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo)
 {
 	*ppTInfo = nullptr;
 	if (iTInfo)
@@ -165,7 +171,7 @@ STDMETHODIMP CoCar::GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo** ppTInfo)
 	return S_OK;
 }
 
-HRESULT CoCar::GetIDsOfNames(const IID& riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId)
+HRESULT CoCoffee::GetIDsOfNames(const IID& riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgDispId)
 {
 	if (riid != IID_NULL)
 	{
@@ -175,7 +181,7 @@ HRESULT CoCar::GetIDsOfNames(const IID& riid, LPOLESTR* rgszNames, UINT cNames, 
 	return DispGetIDsOfNames(_typeInfo, rgszNames, cNames, rgDispId);
 }
 
-HRESULT CoCar::Invoke(DISPID dispIdMember, const IID& riid, LCID lcid, WORD wFlags, DISPPARAMS* pDispParams,
+HRESULT CoCoffee::Invoke(DISPID dispIdMember, const IID& riid, LCID lcid, WORD wFlags, DISPPARAMS* pDispParams,
 	VARIANT* pVarResult, EXCEPINFO* pExcepInfo, UINT* puArgErr)
 {
 	if (riid != IID_NULL)

@@ -1,16 +1,16 @@
-#include "CoCarClassFactory.h"
-#include "CoCar.h"
+#include "CoCoffeeClassFactory.h"
+#include "CoCoffee.h"
 
 extern DWORD g_lockCount;
 extern DWORD g_objCount;
 
-STDMETHODIMP_(ULONG) CoCarClassFactory::AddRef()
+STDMETHODIMP_(ULONG) CoCoffeeClassFactory::AddRef()
 {
     return ++m_refCount;
 
 }
 
-STDMETHODIMP_(ULONG) CoCarClassFactory::Release()
+STDMETHODIMP_(ULONG) CoCoffeeClassFactory::Release()
 {
     if (--m_refCount == 0)
     {
@@ -20,7 +20,7 @@ STDMETHODIMP_(ULONG) CoCarClassFactory::Release()
     return m_refCount;
 }
 
-STDMETHODIMP CoCarClassFactory::QueryInterface(REFIID riid, void** ppv)
+STDMETHODIMP CoCoffeeClassFactory::QueryInterface(REFIID riid, void** ppv)
 {
     // Which aspect of me do they want?
     if (riid == IID_IUnknown)
@@ -41,26 +41,26 @@ STDMETHODIMP CoCarClassFactory::QueryInterface(REFIID riid, void** ppv)
     return S_OK;
 }
 
-STDMETHODIMP CoCarClassFactory::CreateInstance(LPUNKNOWN pUnkOuter, REFIID riid, void** ppv)
+STDMETHODIMP CoCoffeeClassFactory::CreateInstance(LPUNKNOWN pUnkOuter, REFIID riid, void** ppv)
 {
     if (pUnkOuter != NULL)
         return CLASS_E_NOAGGREGATION;
 
-    CoCar* pCarObj = NULL;
+    CoCoffee* pCoffeeObj = NULL;
     HRESULT hr;
 
-    pCarObj = new CoCar;
+    pCoffeeObj = new CoCoffee;
 
-    if (pCarObj == nullptr)
+    if (pCoffeeObj == nullptr)
     {
         return E_OUTOFMEMORY;
     }
 
-    pCarObj->Init();
-    hr = pCarObj->QueryInterface(riid, ppv);
+    pCoffeeObj->Init();
+    hr = pCoffeeObj->QueryInterface(riid, ppv);
 
     if (FAILED(hr))
-        delete pCarObj;
+        delete pCoffeeObj;
 
     return hr;    // S_OK or E_NOINTERFACE.
 
@@ -68,18 +68,18 @@ STDMETHODIMP CoCarClassFactory::CreateInstance(LPUNKNOWN pUnkOuter, REFIID riid,
 
 
 
-CoCarClassFactory::CoCarClassFactory()
+CoCoffeeClassFactory::CoCoffeeClassFactory()
 {
     m_refCount = 0;
     g_objCount++;
 }
 
-CoCarClassFactory::~CoCarClassFactory()
+CoCoffeeClassFactory::~CoCoffeeClassFactory()
 {
     g_objCount--;
 }
 
-STDMETHODIMP CoCarClassFactory::LockServer(BOOL fLock)
+STDMETHODIMP CoCoffeeClassFactory::LockServer(BOOL fLock)
 {
     if (fLock)
         ++g_lockCount;

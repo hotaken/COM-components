@@ -1,7 +1,7 @@
 #include <initguid.h>
 #include <Windows.h>
 #include "iid.h"
-#include "CoCarClassFactory.h"
+#include "CoCoffeeClassFactory.h"
 
 ULONG g_lockCount = 0; // Количество блокировок сервера
 ULONG g_objCount = 0; // Количество "живых" объектов в сервере
@@ -9,12 +9,12 @@ ULONG g_objCount = 0; // Количество "живых" объектов в сервере
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv)
 {
 	HRESULT hr;
-	CoCarClassFactory* pCFact = NULL;
+	CoCoffeeClassFactory* pCFact = NULL;
 
-	if (rclsid != CLSID_CoCar)
+	if (rclsid != CLSID_CoCoffee)
 		return CLASS_E_CLASSNOTAVAILABLE;
 
-	pCFact = new CoCarClassFactory;
+	pCFact = new CoCoffeeClassFactory;
 
 	hr = pCFact->QueryInterface(riid, ppv);
 

@@ -3,16 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoCarComp", "CoCarComp\CoCarComp.vcxproj", "{F17F7825-AD4D-4353-94BE-D3875939CD4D}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoCarClientCpp", "CoCarClientCpp\CoCarClientCpp.vcxproj", "{D3420EF1-7A59-45AC-A1ED-43B1F22270CF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCarClientCs", "CoCarClient_cs\CoCarClientCs.csproj", "{E94C4E1B-CDE7-40CE-82EC-D141DAD1F809}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{409CF51A-8427-48F8-AF82-0655FFDC9E2C}"
 	ProjectSection(SolutionItems) = preProject
 		carcomponent.reg = carcomponent.reg
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoCoffeeComp", "CoCoffeeComp\CoCoffeeComp.vcxproj", "{F17F7825-AD4D-4353-94BE-D3875939CD4D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoCoffeeClientCpp", "CoCoffeeClientCpp\CoCoffeeClientCpp.vcxproj", "{D3420EF1-7A59-45AC-A1ED-43B1F22270CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCoffeeClientCs", "CoCoffeeClientCs\CoCoffeeClientCs.csproj", "{E94C4E1B-CDE7-40CE-82EC-D141DAD1F809}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

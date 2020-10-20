@@ -1,4 +1,4 @@
-LIBRARY "CoCarComp"
+LIBRARY "CoCoffeeComp"
 
 EXPORTS
 	DllGetClassObject PRIVATE

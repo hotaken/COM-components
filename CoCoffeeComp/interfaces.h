@@ -7,22 +7,22 @@
 DECLARE_INTERFACE_(IStats, IUnknown)
 {
 	STDMETHOD(DisplayStats)() PURE;
-	STDMETHOD(GetPetName)(BSTR * petName) PURE;
+	STDMETHOD(GetName)(BSTR * Name) PURE;
 };
 //IEngine моделирует поведение двигателя. Можем ускорять его, 
 //получать значения максимальной и текущей скорости
-DECLARE_INTERFACE_(IEngine, IUnknown)
+DECLARE_INTERFACE_(IFilling, IUnknown)
 {
-	STDMETHOD(SpeedUp)() PURE;
-	STDMETHOD(GetMaxSpeed)(int* maxSpeed) PURE;
-	STDMETHOD(GetCurSpeed)(int* curSpeed) PURE;
+	STDMETHOD(Use)() PURE;
+	STDMETHOD(GetMaxVolume)(int* maxVolume) PURE;
+	STDMETHOD(GetCurVolume)(int* curVolume) PURE;
 };
 //ICreateCar используется для присвоения имени реализуемому  
 //объекту и задания максимальной скорости
-DECLARE_INTERFACE_(ICreateCar, IUnknown)
+DECLARE_INTERFACE_(ICreate, IUnknown)
 {
-	STDMETHOD(SetPetName)(BSTR petName) PURE;
-	STDMETHOD(SetMaxSpeed)(int maxSp) PURE;
+	STDMETHOD(SetName)(BSTR Name) PURE;
+	STDMETHOD(SetMaxVolume)(int maxVl) PURE;
 };
 
 #endif // _INTERFACES
