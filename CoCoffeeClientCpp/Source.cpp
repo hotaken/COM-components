@@ -17,7 +17,7 @@ int main()
 	hr = CoGetClassObject(CLSID_CoCoffee, CLSCTX_INPROC_SERVER,
 		NULL, IID_IClassFactory, (void**)&pCF);
 
-	// Make a CoCar & get ICreateCar.
+	// Make a CoCoffee & get ICreateCoffee.
 	hr = pCF->CreateInstance(NULL, IID_ICreate,
 		(void**)&pICreateCoffee);
 	pCF->Release();
